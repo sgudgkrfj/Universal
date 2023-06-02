@@ -1,21 +1,17 @@
-class InvalidUrlError(Exception):
-    def __init__(self, username):
-        self.username = username
 
-
-def register_user(username):
-    if len(username) < 5:
-        raise InvalidUrlError(username)
-    else:
-        print("vas zaregano")
+class InvalidFileFormatError(Exception):
+    def __init__(self, f):
+        self.f = f
+def read_file(f):
+    try:
+        with open(f, "r") as file:
+            content = file.read()
+            return "Вміст файлу:", content
+    except IOError:
+        raise InvalidFileFormatError(f)
 
 try:
-    username = input("Введіть ім'я користувача")
-    register_user(username)
-except InvalidUrlError as e:
-    print(f"Неправильне ім'я користувача {e.username}!"
-          f"Треба мінімум 5 символів!")
-
-
-
-
+    read_file(input("Введіть назву файлу: "))
+except InvalidFileFormatError as e:
+    print(f"Невірний формат файлу {e.f},"
+          f" підтримуються тільки текстові файли")
