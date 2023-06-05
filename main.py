@@ -1,21 +1,22 @@
+import requests
+
 class InvalidUrlError(Exception):
-    def __init__(self, username):
-        self.username = username
+    def __init__(self, url):
+        self.url = url
+        super().__init__(f"Invalid URL: {url}")
 
+def check_wikipedia_url(url):
+    if not url.startswith('https://en.wikipedia.org/wiki/'):
+        raise InvalidUrlError(url)
 
-def register_user(username):
-    if len(username) < 5:
-        raise InvalidUrlError(username)
-    else:
-        print("vas zaregano")
+    response = requests.head(url)
+    if response.status_code != 200:
+        raise InvalidUrlError(url)
 
+    print("Valid Wikipedia URL")
+
+url = 'https://en/wikipedia.org/wiki/4_Vesta'
 try:
-    username = input("Введіть ім'я користувача")
-    register_user(username)
+    check_wikipedia_url(url)
 except InvalidUrlError as e:
-    print(f"Неправильне ім'я користувача {e.username}!"
-          f"Треба мінімум 5 символів!")
-
-
-
-
+    print(e)
